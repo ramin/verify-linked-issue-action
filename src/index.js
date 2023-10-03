@@ -1,9 +1,12 @@
- const core = require('@actions/core')
+const core = require('@actions/core')
 const github = require('@actions/github');
 const context = github.context;
 const token = process.env.GITHUB_TOKEN;
 const octokit = github.getOctokit(token);
 const fs = require('fs')
+
+const successMessage = "Referenced issue found in commit message or PR body."
+const defaultErrorMessage = "No referenced issue found. Please create an issue and reference it in the commit message or PR body."
 
 async function verifyLinkedIssue() {
   let linkedIssue = await checkBodyForValidIssue(context, github);
@@ -12,7 +15,7 @@ async function verifyLinkedIssue() {
   }
 
   if(linkedIssue){
-    core.notice("Success! Linked Issue Found!");
+    core.notice(successMessage);
   }
   else{
       let comment = core.getInput('comment')
@@ -20,9 +23,7 @@ async function verifyLinkedIssue() {
       if (comment.enabled) {
         await createMissingIssueComment(context, github);
       }
-
-      // core.error("No Linked Issue Found!");
-      core.setFailed("No Linked Issue Found!");
+      core.setFailed(defaultErrorMessage);
   }
 }
 
@@ -60,7 +61,6 @@ async function checkBodyForValidIssue(context, github){
 }
 
 async function checkEventsListForConnectedEvent(context, github){
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
   let pull = await octokit.rest.issues.listEvents({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -79,8 +79,9 @@ async function checkEventsListForConnectedEvent(context, github){
 }
 
 async function createMissingIssueComment(context) {
-  const defaultMessage =  'Build Error! No Linked Issue found. Please link an issue or mention it in the body using #<issue_id>';
-  let messageBody = core.getInput('message');
+  let comment = core.getInput('comment');
+  let messageBody = comment.body ? comment.message : defaultErrorMessage;
+
   if(!messageBody){
     let filename = core.getInput('filename');
     if(!filename){
@@ -111,7 +112,6 @@ async function createMissingIssueComment(context) {
 }
 
 async function run() {
-
   try {
     if(!context.payload.pull_request){
         core.info('Not a pull request skipping verification!');
@@ -129,7 +129,6 @@ async function run() {
     const errorMessage = "Error verifying linked issue."
     core.setFailed(errorMessage + '\n\n' + err.message)
   }
-
 }
 
 run();
