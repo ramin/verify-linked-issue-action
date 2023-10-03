@@ -1,5 +1,4 @@
- 
-const core = require('@actions/core')
+ const core = require('@actions/core')
 const github = require('@actions/github');
 const context = github.context;
 const token = process.env.GITHUB_TOKEN;
@@ -17,7 +16,7 @@ async function verifyLinkedIssue() {
   }
   else{
       await createMissingIssueComment(context, github);
-      core.error("No Linked Issue Found!");
+      // core.error("No Linked Issue Found!");
       core.setFailed("No Linked Issue Found!");
   }
 }
@@ -60,7 +59,7 @@ async function checkEventsListForConnectedEvent(context, github){
   let pull = await octokit.rest.issues.listEvents({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    issue_number: context.payload.pull_request.number 
+    issue_number: context.payload.pull_request.number
   });
 
   if(pull.data){
@@ -116,7 +115,7 @@ async function run() {
 
     core.debug('Starting Linked Issue Verification!');
     await verifyLinkedIssue();
-    
+
   } catch (err) {
     core.error(`Error verifying linked issue.`)
     core.error(err)
