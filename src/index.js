@@ -29,9 +29,9 @@ async function verifyLinkedIssue() {
 }
 
 async function checkBodyForValidIssue(context, github){
-  core.info(context.payload.repository.full_name)
-  core.debug(">>>>>")
-  core.info(`The event payload: ${JSON.stringify(context.payload, null, 2)}`);
+  // core.info(context.payload.repository.full_name)
+  // core.debug(">>>>>")
+  // core.info(`The event payload: ${JSON.stringify(context.payload, null, 2)}`);
 
   let body = context.payload.pull_request.body;
   if (!body){
@@ -39,11 +39,11 @@ async function checkBodyForValidIssue(context, github){
   }
   core.debug(`Checking PR Body: "${body}"`)
   const pattern = _.escapeRegExp(`${context.payload.repository.full_name}/issues/(\\d+)}`)
-  core.debug(pattern)
+  core.info(pattern)
   const re = new RegExp(pattern);
-  core.debug("regexp" + re);
+  core.info("regexp" + re);
   const matches = body.match(re);
-  core.debug(`regex matches: ${matches}`)
+  core.info(`regex matches: ${matches}`)
   if(matches){
     for(let i=0,len=matches.length;i<len;i++){
       let match = matches[i];
