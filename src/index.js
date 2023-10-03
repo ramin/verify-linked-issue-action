@@ -15,7 +15,12 @@ async function verifyLinkedIssue() {
     core.notice("Success! Linked Issue Found!");
   }
   else{
-      await createMissingIssueComment(context, github);
+      let comment = core.getInput('comment')
+
+      if (comment.enabled) {
+        await createMissingIssueComment(context, github);
+      }
+
       // core.error("No Linked Issue Found!");
       core.setFailed("No Linked Issue Found!");
   }
@@ -73,7 +78,7 @@ async function checkEventsListForConnectedEvent(context, github){
   return false;
 }
 
-async function createMissingIssueComment(context,github ) {
+async function createMissingIssueComment(context) {
   const defaultMessage =  'Build Error! No Linked Issue found. Please link an issue or mention it in the body using #<issue_id>';
   let messageBody = core.getInput('message');
   if(!messageBody){
