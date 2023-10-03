@@ -84,6 +84,15 @@ async function checkEventsListForConnectedEvent(context, github){
   return false;
 }
 
+async function checkForIgnoreLabel(context) {
+  const ignore = core.getInput('ignore_labels') || ''
+  core.info(ignore)
+  core.info(context.payload.pull_request.labels)
+  const pr_labels = context.payload.pull_request.labels.map(x => x.name)
+
+  return _.includes(pr_labels, ignore);
+}
+
 async function createMissingIssueComment(context) {
   let comment = core.getInput('comment');
   let messageBody = comment.body ? comment.message : defaultErrorMessage;
@@ -125,6 +134,14 @@ async function run() {
     }
 
     core.debug('Starting Linked Issue Verification!');
+
+    const ignoreLabels = await checkForIgnoreLabel(context);
+
+    if(ignoreLabels){
+      core.info('Pull Request has ignore label, skipping verification');
+      return;
+    }
+
     await verifyLinkedIssue();
 
   } catch (err) {
