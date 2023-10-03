@@ -14,6 +14,6 @@ jobs:
     name: Ensure Pull Request has a linked issue.
     steps:
       - name: verify referenced issue
-        uses: ramin/verify-referenced-issue-exists@v1.0.1
+        uses: ramin/verify-referenced-issue-exists@v1.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -10,7 +10,7 @@ On a PR that does not include a linked issue or reference to an issue in the bod
 ### As a part of an existing workflow
 ``` yaml
 - name: Verify Linked Issue
-  uses: ramin/verify-referenced-issue-exists@v1.0.1
+  uses: ramin/verify-referenced-issue-exists@v1.2.0
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -33,13 +33,13 @@ You can customize this message by providing an optional 'message' input with the
 
 ```yaml
 - name: Verify Linked Issue
-  uses: ramin/verify-referenced-issue-exists@v1.0.1
+  uses: ramin/verify-referenced-issue-exists@v1.2.0
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
     comment:
       enabled: true
-        message: 'Error! This is a custom error'
+      message: 'Error! This is a custom error'
  ```
 
 ### File Templates
@@ -51,24 +51,18 @@ There are two options when using template files:
 * Option 2) Speciy a filename input with the path to a template file.
 ```yaml
 - name: Verify Linked Issue
-  uses: ramin/verify-referenced-issue-exists@v1.0.1
+  uses: ramin/verify-referenced-issue-exists@v1.2.0
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
     filename: 'example/templates/fail_comment.txt'
+    ignore_label: hotfix
 ```
 
 ## Trying it out
 
 * Create a new pull request and take care to not include a linked item or mention an issue.
 * The build should fail.
-* Edit the PR body and add a reference to a valid issue (e.g. #123 )
-
-## Known Issues
-* There must be a space after the issue number (ie "#12 " not "#12".) This is due to the way the RegEx is structured and will be resolved in a future release.
-
-* The Issue reference by # needs to be in the body, we don't currently look in the title. That is a future enhancement.
-
-v1
+* Edit the PR body and add a reference to a valid issue with a url (e.g. github.com/ramin/verify-referenced-issue-exists/issues/123 ) and let github turn it into an embeded markdown link
 
 
