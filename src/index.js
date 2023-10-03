@@ -33,8 +33,8 @@ async function checkBodyForValidIssue(context, github){
     return false;
   }
   core.debug(`Checking PR Body: "${body}"`)
-  const regex = new RegExp(`${context.repository}/issues/(\\d+)}`);
-  core.debug("regexp", regex);
+  const re = new RegExp(`${context.repository}/issues/(\\d+)}`);
+  core.debug("regexp", re);
   const matches = body.match(re);
   core.debug(`regex matches: ${matches}`)
   if(matches){
