@@ -1,16 +1,16 @@
 # Verify Linked Issue Action
-A GitHub action that verifies your pull request contains a reference to an issue. 
+A GitHub action that verifies your pull request contains a reference to an issue.
 
 On a PR that does not include a linked issue or reference to an issue in the body, the check should fail and a comment will be added to the PR.
 
-![Failing checks](images/failed-pr-body.png "Failing checks")
+![Failing checks](images/failure.png "Failing checks")
 
 ## Installation
 
 ### As a part of an existing workflow
 ``` yaml
 - name: Verify Linked Issue
-  uses: hattan/verify-linked-issue-action@v1.1.5
+  uses: ramin/verify-referenced-issue-exists@v1.0.1
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -23,7 +23,7 @@ Pleasure ensure the following types on the pull_request triggers:
 
 ### As a separate workflow
 * Ensure you have the folder .github/workflows
-* In .github/workflows, place the [pr_verify_linked_issue.yml](example/pr_verify_linked_issue.yml) workflow.
+* In .github/workflows, place the [pr_verify_linked_issue.yml](example/pr_verify_referenced_issue.yml) workflow.
 
 ### Inputs
 (Optional) The action will add the following text to a PR when verification fails.
@@ -33,11 +33,13 @@ You can customize this message by providing an optional 'message' input with the
 
 ```yaml
 - name: Verify Linked Issue
-  uses: hattan/verify-linked-issue-action@v1.1.5
+  uses: ramin/verify-referenced-issue-exists@v1.0.1
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
-    message: 'Error! This is a custom error'
+    comment:
+      enabled: true
+        message: 'Error! This is a custom error'
  ```
 
 ### File Templates
@@ -46,10 +48,10 @@ If you want a more complex message, consider using a static template file. (Supp
 There are two options when using template files:
 
 * Option 1) Default File Path: Add a file to .github called VERIFY_PR_COMMENT_TEMPLATE.md. The content of this file will be used as the fail comment in the PR.
-* Option 2) Speciy a filename input with the path to a template file. 
+* Option 2) Speciy a filename input with the path to a template file.
 ```yaml
 - name: Verify Linked Issue
-  uses: hattan/verify-linked-issue-action@v1.1.5
+  uses: ramin/verify-referenced-issue-exists@v1.0.1
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
@@ -62,7 +64,6 @@ There are two options when using template files:
 * The build should fail.
 * Edit the PR body and add a reference to a valid issue (e.g. #123 )
 
-![Failed Build log](images/failed1.png "Failed Build log")
 ## Known Issues
 * There must be a space after the issue number (ie "#12 " not "#12".) This is due to the way the RegEx is structured and will be resolved in a future release.
 
