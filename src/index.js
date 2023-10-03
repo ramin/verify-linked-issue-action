@@ -89,7 +89,7 @@ async function checkForIgnoreLabel(context) {
   core.info(ignore)
   core.info(`The event payload: ${JSON.stringify(context.payload.pull_request.labels, null, 2)}`);
   const pr_labels = context.payload.pull_request.labels.map(x => x.name)
-
+  core.info(pr_labels)
   return _.includes(pr_labels, ignore);
 }
 
