@@ -4,6 +4,7 @@ const context = github.context;
 const token = process.env.GITHUB_TOKEN;
 const octokit = github.getOctokit(token);
 const fs = require('fs')
+const _ = require('lodash')
 
 const successMessage = "Referenced issue found in commit message or PR body."
 const defaultErrorMessage = "No referenced issue found. Please create an issue and reference it in the commit message or PR body."
@@ -33,8 +34,10 @@ async function checkBodyForValidIssue(context, github){
     return false;
   }
   core.debug(`Checking PR Body: "${body}"`)
-  const re = new RegExp(`${context.repository}/issues/(\\d+)}`);
-  core.debug("regexp", re);
+  const pattern = _.escapeRegExp(`${context.repository}/issues/(\\d+)}`)
+  core.debug(pattern)
+  const re = new RegExp(pattern);
+  core.debug("regexp" + re);
   const matches = body.match(re);
   core.debug(`regex matches: ${matches}`)
   if(matches){
