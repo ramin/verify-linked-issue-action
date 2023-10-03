@@ -84,7 +84,10 @@ async function checkEventsListForConnectedEvent(context, github){
 
 async function checkForIgnoreLabel(context) {
   const ignore = core.getInput('ignore_labels') || ''
+  core.info(ignore)
   const pr_labels = context.payload.pull_request.labels.map(x => x.name)
+  core.info(pr_labels)
+  core.info("includes => ", _.includes(pr_labels, ignore));
   return _.includes(pr_labels, ignore);
 }
 
