@@ -29,8 +29,6 @@ async function verifyLinkedIssue() {
 }
 
 async function checkBodyForValidIssue(context, github){
-  // core.info(`The event payload: ${JSON.stringify(context.payload, null, 2)}`);
-  core.info(context.payload.labels)
   let body = context.payload.pull_request.body;
   if (!body){
     return false;
@@ -86,10 +84,7 @@ async function checkEventsListForConnectedEvent(context, github){
 
 async function checkForIgnoreLabel(context) {
   const ignore = core.getInput('ignore_labels') || ''
-  core.info(ignore)
-  core.info(`The event payload: ${JSON.stringify(context.payload.pull_request.labels, null, 2)}`);
   const pr_labels = context.payload.pull_request.labels.map(x => x.name)
-  core.info(pr_labels)
   return _.includes(pr_labels, ignore);
 }
 
@@ -138,7 +133,7 @@ async function run() {
     const ignoreLabels = await checkForIgnoreLabel(context);
 
     if(ignoreLabels){
-      core.info('Pull Request has ignore label, skipping verification');
+      core.notice('Pull Request has ignore label, skipping verification');
       return;
     }
 
