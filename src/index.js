@@ -3,8 +3,8 @@ const github = require('@actions/github');
 const context = github.context;
 const token = process.env.GITHUB_TOKEN;
 const octokit = github.getOctokit(token);
-const fs = require('fs')
-const _ = require('lodash')
+const fs = require('fs');
+const _ = require('lodash');
 
 const successMessage = "Referenced issue found in commit message or PR body."
 const defaultErrorMessage = "No referenced issue found. Please create an issue and reference it in the commit message or PR body."
