@@ -14,8 +14,8 @@
     "url": "git+https://github.com/hattan/verify-linked-issue-action.git"
   },
   "keywords": [],
-  "author": "Hattan Shobokshi",
-  "license": "ISC",
+  "author": "Ramin Keene",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ramin/verify-references-issue-exists/issues"
   },
