@@ -29,12 +29,14 @@ async function verifyLinkedIssue() {
 }
 
 async function checkBodyForValidIssue(context, github){
+  core.debug(context)
+  core.debug(github)
   let body = context.payload.pull_request.body;
   if (!body){
     return false;
   }
   core.debug(`Checking PR Body: "${body}"`)
-  const pattern = _.escapeRegExp(`${context.github.repository}/issues/(\\d+)}`)
+  const pattern = _.escapeRegExp(`${github.repository}/issues/(\\d+)}`)
   core.debug(pattern)
   const re = new RegExp(pattern);
   core.debug("regexp" + re);
