@@ -10,7 +10,12 @@ const successMessage = "Referenced issue found in commit message or PR body."
 const defaultErrorMessage = "No referenced issue found. Please create an issue and reference it in the commit message or PR body."
 
 async function verifyLinkedIssue() {
-  let linkedIssue = await checkBodyForValidIssue(context, github);
+  let linkedIssue = await checkBodyForValidIssueLink(context, github);
+
+  if (!linkedIssue) {
+    linkedIssue = await checkBodyForValidIssueRef(context, github);
+  }
+
   if (!linkedIssue) {
     linkedIssue = await checkEventsListForConnectedEvent(context, github);
   }
@@ -28,7 +33,40 @@ async function verifyLinkedIssue() {
   }
 }
 
-async function checkBodyForValidIssue(context, github){
+async function checkBodyForValidIssueRef(context, github){
+  let body = context.payload.pull_request.body;
+  if (!body){
+    return false;
+  }
+  core.debug(`Checking PR Body: "${body}"`)
+  const re = /#(.*?)[\s]/g;
+  const matches = body.match(re);
+  core.debug(`regex matches: ${matches}`)
+  if(matches){
+    for(let i=0,len=matches.length;i<len;i++){
+      let match = matches[i];
+      let issueId = match.replace('#','').trim();
+      core.debug(`verifying match is a valid issue issueId: ${issueId}`)
+      try{
+        let issue = await  octokit.rest.issues.get({
+          owner: context.repo.owner,
+          repo: context.repo.repo,
+          issue_number: issueId,
+        });
+        if(issue){
+          core.debug(`Found issue in PR Body ${issueId}`);
+          return true;
+        }
+      }
+      catch{
+        core.debug(`#${issueId} is not a valid issue.`);
+      }
+    }
+  }
+  return false;
+}
+
+async function checkBodyForValidIssueLink(context, github){
   let body = context.payload.pull_request.body;
   if (!body){
     return false;
